@@ -1,4 +1,4 @@
-        路径: target/release/rustby9527.exe
+name: Build Rust EXE
 
 on:
   push:
@@ -33,3 +33,33 @@ jobs:
             {
               "kind": "git",
               "repository": "https://mirrors.tuna.tsinghua.edu.cn/git/vcpkg/ports.git",
+              "packages": [ "*" ]
+            }
+          ]
+        }
+        "@ | Out-File -FilePath "vcpkg-configuration.json" -Encoding utf8
+
+        # 3. 【关键】安装 x64-windows-static 版本的库
+        # 注意：这里必须和你代码要求的完全一致
+        .\vcpkg install openssl:x64-windows-static
+        .\vcpkg install libvpx:x64-windows-static
+        .\vcpkg install libyuv:x64-windows-static
+        
+        # 4. 设置环境变量
+        echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        echo "${{ github.workspace }}/vcpkg" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+    # --- 步骤 2：编译 Rust 代码 ---
+    - name: Build Release
+      run: cargo build --release --verbose
+      env:
+        VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+        # 【关键】强制指定使用静态库 Triplet
+        VCPKG_DEFAULT_TRIPLET: x64-windows-static
+
+    # --- 步骤 3：上传成果 ---
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rust-app-exe
+        path: target/release/rustby9527.exe
