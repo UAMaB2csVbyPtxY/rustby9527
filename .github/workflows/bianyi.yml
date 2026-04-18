@@ -30,7 +30,7 @@ jobs:
         .\vcpkg\vcpkg install libvpx:x64-windows-static-md
         .\vcpkg\vcpkg install libyuv:x64-windows-static-md
         # 如果还有其他报错，可能需要添加更多库，但以上是常见的
-   - name: Build Release
+  - name: Build Release
   run: |
     cargo build --release --verbose
   env:
