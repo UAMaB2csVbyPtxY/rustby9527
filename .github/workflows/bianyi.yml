@@ -1,0 +1,27 @@
+name: Build Rust EXE
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # 允许手动点击按钮触发
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: windows-latest  # 关键：使用 Windows 服务器来编译 exe
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Release
+      run: cargo build --release --verbose
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rust-app-exe
+        path: target/release/rustby9527.exe
