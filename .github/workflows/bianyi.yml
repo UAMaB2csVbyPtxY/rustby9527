@@ -16,9 +16,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Build Release
-      run: cargo build --release --verbose
+    - name: Install VCPKG and Dependencies
+      run: |
+        # 安装 vcpkg (Windows 下的 C++ 包管理器)
+        git clone https://github.com/Microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat
+        
+        # 设置环境变量，告诉编译器 vcpkg 在哪里
+        echo "VCPKG_ROOT=$PWD/vcpkg" >> $env:GITHUB_ENV
+        
+        # 安装 magnum-opus 依赖的核心库 (根据 magnum-opus 的文档，通常需要这些)
+        .\vcpkg\vcpkg install openssl:x64-windows-static-md
+        .\vcpkg\vcpkg install libvpx:x64-windows-static-md
+        .\vcpkg\vcpkg install libyuv:x64-windows-static-md
+        # 如果还有其他报错，可能需要添加更多库，但以上是常见的
+   - name: Build Release
+  run: |
+    cargo build --release --verbose
+  env:
+    # 强制 cargo 使用 vcpkg 提供的库
+    VCPKG_ROOT: ${{ env.VCPKG_ROOT }}
+    CARGO_TARGET_DIR: target
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
