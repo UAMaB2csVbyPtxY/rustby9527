@@ -1,4 +1,4 @@
-name: Build Rust EXE
+name名称
 
 on:
   push:
@@ -18,15 +18,16 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # --- 步骤 1：安装 vcpkg 和静态依赖 ---
-    - name: Setup vcpkg Static Deps
+    # --- 步骤 1：安装 vcpkg 并强制安装静态库 ---
+    - name: Setup vcpkg (Classic Mode)
       run: |
         # 1. 克隆 vcpkg
         git clone https://github.com/Microsoft/vcpkg.git
         cd vcpkg
         .\bootstrap-vcpkg.bat
         
-        # 2. 配置清华镜像源 (防止下载超时)
+        # 2. 【关键】配置清华镜像源
+        # 解决下载超时问题
         @"
         {
           "registries": [
@@ -39,8 +40,8 @@ jobs:
         }
         "@ | Out-File -FilePath "vcpkg-configuration.json" -Encoding utf8
 
-        # 3. 【关键】安装 x64-windows-static 版本的库
-        # 注意：这里必须和你代码要求的完全一致
+        # 3. 【关键】手动安装静态库
+        # 显式指定 :x64-windows-static，不使用清单模式自动安装
         .\vcpkg install openssl:x64-windows-static
         .\vcpkg install libvpx:x64-windows-static
         .\vcpkg install libyuv:x64-windows-static
@@ -54,7 +55,7 @@ jobs:
       run: cargo build --release --verbose
       env:
         VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-        # 【关键】强制指定使用静态库 Triplet
+        # 强制指定使用静态库
         VCPKG_DEFAULT_TRIPLET: x64-windows-static
 
     # --- 步骤 3：上传成果 ---
