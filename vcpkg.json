@@ -1,107 +1,6 @@
 {
-  "dependencies": [
-    {
-      "name": "aom",
-      "host": true
-    },
-    {
-      "name": "aom",
-      "host": false
-    },
-    {
-      "name": "cpu-features",
-      "platform": "android"
-    },
-    {
-      "name": "libjpeg-turbo",
-      "host": true
-    },
-    {
-      "name": "libjpeg-turbo",
-      "host": false
-    },
-    {
-      "name": "oboe",
-      "platform": "android"
-    },
-    {
-      "名称": "作品",
-      "主机": 真
-    },
-    {
-      "名称": "作品",
-      "主机": 假
-    },
-    {
-      "名称": "libvpx",
-      "主机": 真
-    },
-    {
-      "名称": "libvpx",
-      "主机": 假
-    },
-    {
-      "名称": "libyuv",
-      "主机": 真
-    },
-    {
-      "名称": "libyuv",
-      "主机": 假
-    },
-    {
-      "名称": "mfx-dispatch",
-      "主机": 真,
-      "平台": "((x86 | x64) & (android | linux)) | (windows & !uwp)"
-    },
-    {
-      "名称": "mfx-dispatch",
-      "主机": 假,
-      "平台": "((x86 | x64) & (android | linux)) | (windows & !uwp)"
-    },
-    {
-      "名称": "ffmpeg",
-      "主机": 真,
-      "功能": [
-        {
-          "名称": "amf",
-          "平台": "((windows | linux) & 静态)"
-        },
-        {
-          "名称": "英伟达编解码器",
-          "平台": "((windows | linux) & 静态)"
-        },
-        {
-          "名称": "qsv",
-          "平台": "(Windows & 静态)"
-        }
-      ],
-      "platform": "((windows | (linux & !arm32) | osx) & static)"
-    },
-    {
-      "name": "ffmpeg",
-      "host": false,
-      "platform": "((android | ios | (linux & arm32)) & static)"
-    }
-  ],
-  "vcpkg-configuration": {
-    "default-registry": {
-      "kind": "builtin",
-      "baseline": "120deac3062162151622ca4860575a33844ba10b"
-    },
-    "overlay-ports": [
-      "./res/vcpkg"
-    ]
-  },
-  "overrides": [
-    {
-      "name": "ffnvcodec",
-      "version": "12.1.14.0"
-    },
-    {
-      "name": "amd-amf",
-      "version": "1.4.35"
-    }
-    {
+  "name": "rustby9527",
+  "version": "1.0.0",
   "dependencies": [
     "openssl",
     "libvpx",
@@ -113,7 +12,5 @@
       "repository": "https://mirrors.tuna.tsinghua.edu.cn/git/vcpkg/ports.git",
       "packages": [ "*" ]
     }
-  ]
-}
   ]
 }
