@@ -25,54 +25,54 @@
       "platform": "android"
     },
     {
-      "name": "opus",
-      "host": true
+      "名称": "作品",
+      "主机": 真
     },
     {
-      "name": "opus",
-      "host": false
+      "名称": "作品",
+      "主机": 假
     },
     {
-      "name": "libvpx",
-      "host": true
+      "名称": "libvpx",
+      "主机": 真
     },
     {
-      "name": "libvpx",
-      "host": false
+      "名称": "libvpx",
+      "主机": 假
     },
     {
-      "name": "libyuv",
-      "host": true
+      "名称": "libyuv",
+      "主机": 真
     },
     {
-      "name": "libyuv",
-      "host": false
+      "名称": "libyuv",
+      "主机": 假
     },
     {
-      "name": "mfx-dispatch",
-      "host": true,
-      "platform": "((x86 | x64) & (android | linux)) | (windows & !uwp)"
+      "名称": "mfx-dispatch",
+      "主机": 真,
+      "平台": "((x86 | x64) & (android | linux)) | (windows & !uwp)"
     },
     {
-      "name": "mfx-dispatch",
-      "host": false,
-      "platform": "((x86 | x64) & (android | linux)) | (windows & !uwp)"
+      "名称": "mfx-dispatch",
+      "主机": 假,
+      "平台": "((x86 | x64) & (android | linux)) | (windows & !uwp)"
     },
     {
-      "name": "ffmpeg",
-      "host": true,
-      "features": [
+      "名称": "ffmpeg",
+      "主机": 真,
+      "功能": [
         {
-          "name": "amf",
-          "platform": "((windows | linux) & static)"
+          "名称": "amf",
+          "平台": "((windows | linux) & 静态)"
         },
         {
-          "name": "nvcodec",
-          "platform": "((windows | linux) & static)"
+          "名称": "英伟达编解码器",
+          "平台": "((windows | linux) & 静态)"
         },
         {
-          "name": "qsv",
-          "platform": "(windows & static)"
+          "名称": "qsv",
+          "平台": "(Windows & 静态)"
         }
       ],
       "platform": "((windows | (linux & !arm32) | osx) & static)"
@@ -101,5 +101,19 @@
       "name": "amd-amf",
       "version": "1.4.35"
     }
+    {
+  "dependencies": [
+    "openssl",
+    "libvpx",
+    "libyuv"
+  ],
+  "registries": [
+    {
+      "kind": "git",
+      "repository": "https://mirrors.tuna.tsinghua.edu.cn/git/vcpkg/ports.git",
+      "packages": [ "*" ]
+    }
+  ]
+}
   ]
 }
