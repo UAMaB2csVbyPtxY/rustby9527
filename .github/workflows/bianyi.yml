@@ -9,37 +9,44 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # 设置 vcpkg 的默认路径
+  VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
 jobs:
   build:
-    runs-on: windows-latest  # 关键：使用 Windows 服务器来编译 exe
+    runs-on: windows-latest  # 使用 Windows 服务器编译 exe
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Install VCPKG and Dependencies
-      run: |
-        # 安装 vcpkg (Windows 下的 C++ 包管理器)
-        git clone https://github.com/Microsoft/vcpkg.git
-        .\vcpkg\bootstrap-vcpkg.bat
-        
-        # 设置环境变量，告诉编译器 vcpkg 在哪里
-        echo "VCPKG_ROOT=$PWD/vcpkg" >> $env:GITHUB_ENV
-        
-        # 安装 magnum-opus 依赖的核心库 (根据 magnum-opus 的文档，通常需要这些)
-        .\vcpkg\vcpkg install openssl:x64-windows-static-md
-        .\vcpkg\vcpkg install libvpx:x64-windows-static-md
-        .\vcpkg\vcpkg install libyuv:x64-windows-static-md
-        # 如果还有其他报错，可能需要添加更多库，但以上是常见的
-  - name: Build Release
-  run: |
-    cargo build --release --verbose
-  env:
-    # 强制 cargo 使用 vcpkg 提供的库
-    VCPKG_ROOT: ${{ env.VCPKG_ROOT }}
-    CARGO_TARGET_DIR: target
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
+    # --- 关键步骤：安装 vcpkg 和依赖库 (解决 magnum-opus 报错) ---
+    - name: Install VCPKG Dependencies
+      run: |
+        # 1. 克隆 vcpkg 工具
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
+        .\bootstrap-vcpkg.bat
+        
+        # 2. 安装 magnum-opus 需要的核心库 (OpenSSL, 视频编解码等)
+        # 注意：这步比较耗时，请耐心等待
+        .\vcpkg install openssl:x64-windows-static-md
+        .\vcpkg install libvpx:x64-windows-static-md
+        .\vcpkg install libyuv:x64-windows-static-md
+
+    # --- 编译步骤 ---
+    - name: Build Release
+      run: cargo build --release --verbose
+      env:
+        # 确保 cargo 能找到刚才安装的 vcpkg
+        VCPKG_ROOT: ${{ env.VCPKG_ROOT }}
+        # 告诉 cargo 使用静态链接，这样生成的 exe 更独立
+        RUSTFLAGS: "-C target-feature=+crt-static"
+
+    # --- 上传结果 ---
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: rust-app-exe
+        # 这里的 rustby9527.exe 请确保和你的 Cargo.toml 里的名字一致
         path: target/release/rustby9527.exe
